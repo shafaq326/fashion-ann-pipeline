@@ -1,8 +1,14 @@
 import os
+import yaml
 import numpy as np
 from sklearn.model_selection import train_test_split
 
 os.makedirs("data/processed", exist_ok=True)
+
+with open("params.yaml", "r") as file:
+    params = yaml.safe_load(file)
+
+preprocess_params = params["preprocess"]
 
 x_train = np.load("data/raw/x_train.npy")
 y_train = np.load("data/raw/y_train.npy")
@@ -15,8 +21,8 @@ x_test = x_test.astype("float32") / 255.0
 x_train, x_val, y_train, y_val = train_test_split(
     x_train,
     y_train,
-    test_size=0.1,
-    random_state=42,
+    test_size=preprocess_params["test_size"],
+    random_state=preprocess_params["seed"],
     stratify=y_train
 )
 
